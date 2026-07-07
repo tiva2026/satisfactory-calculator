@@ -8,7 +8,7 @@ import { slugify } from '@/src/utils/slugify';
  * 自动包含所有物品页面，供 Google 爬取
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://satisfactory-calc.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://satis.cc';
 
   // 静态页面
   const staticRoutes: MetadataRoute.Sitemap = [

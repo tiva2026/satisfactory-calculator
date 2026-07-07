@@ -2,6 +2,10 @@
 
 A mobile-first production chain calculator for [Satisfactory](https://www.satisfactorygame.com/), built with Next.js 15 and TypeScript. Plan your factory efficiently by calculating the full production tree for any item in the game.
 
+Live site: [https://satis.cc](https://satis.cc)
+
+The calculator is now live and ready to use in production.
+
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38bdf8?logo=tailwind-css)
@@ -38,8 +42,8 @@ A mobile-first production chain calculator for [Satisfactory](https://www.satisf
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/satisfactory-production-calculator.git
-cd satisfactory-production-calculator
+git clone https://github.com/tiva2026/satisfactory-calculator.git
+cd satisfactory-calculator
 
 # Install dependencies
 npm install
@@ -52,6 +56,11 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Live Deployment
+
+The production deployment is available at [https://satis.cc](https://satis.cc).
+`www.satis.cc` redirects to the apex domain.
 
 ### Build for Production
 

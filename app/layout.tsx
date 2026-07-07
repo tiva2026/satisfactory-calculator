@@ -2,9 +2,13 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://satis.cc'),
   title: 'Satisfactory Production Calculator | Factory Planner',
   description: 'Mobile-first Satisfactory production chain calculator. Plan your factory, optimize resource usage, and calculate production trees for any item.',
   keywords: 'Satisfactory, Production Calculator, Factory Planner, Resource Optimizer, Production Chain',
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export const viewport: Viewport = {

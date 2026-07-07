@@ -72,6 +72,9 @@ export async function generateMetadata({
       title: `${itemName} Production Calculator | Satisfactory`,
       description: `Calculate optimal production chains for ${itemName} in Satisfactory. Mobile-first production tree calculator with resource planning.`,
       keywords: `${itemName}, Satisfactory, Production Calculator, ${itemName} recipe`,
+      alternates: {
+        canonical: `/calc/${itemSlug}`,
+      },
     };
   } catch (error) {
     return {
