@@ -5,11 +5,12 @@ test.describe('Satisfactory calculator', () => {
     await page.goto('/calc/iron-ingot');
 
     await expect(page.getByTestId('selected-item')).toBeVisible();
-    await expect(page.getByTestId('selected-item-class')).toHaveText('Desc_IronIngot_C');
+    await expect(page.locator('[data-testid="selected-item-class"]')).toHaveCount(0);
     await expect(page.getByTestId('production-pipeline')).toBeVisible();
     await expect(page.getByTestId('raw-resources')).toBeVisible();
     await expect(page.getByTestId('total-power')).toBeVisible();
-    await expect(page.getByTestId('buildings-summary')).toContainText('SmelterMk1');
+    await expect(page.getByTestId('buildings-summary')).toContainText('Smelter');
+    await expect(page.getByTestId('buildings-summary')).not.toContainText('SmelterMk1');
     await expect(page.locator('body')).not.toContainText('Advertisement');
     await expect(page.locator('body')).not.toContainText('Google AdSense');
   });
@@ -21,7 +22,7 @@ test.describe('Satisfactory calculator', () => {
     await page.getByTestId('search-result-Desc_IronPlate_C').click();
 
     await expect(page).toHaveURL(/\/calc\/iron-plate$/);
-    await expect(page.getByTestId('selected-item-class')).toHaveText('Desc_IronPlate_C');
+    await expect(page.locator('[data-testid="selected-item-class"]')).toHaveCount(0);
     await expect(page.getByTestId('selected-item')).toBeVisible();
   });
 });

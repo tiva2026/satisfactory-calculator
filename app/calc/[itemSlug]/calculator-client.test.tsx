@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 var pushMock = jest.fn();
 var mockCalculateFullProductionTree = jest.fn();
@@ -104,7 +104,8 @@ describe('CalculatorClient', () => {
       );
     });
 
-    expect(screen.getByText('Desc_IronIngot_C')).toBeTruthy();
+    expect(screen.queryByText('Desc_IronIngot_C')).toBeNull();
+    expect(within(screen.getByTestId('selected-item')).getByText('Iron Ingot')).toBeTruthy();
     expect(screen.queryByText('Advertisement')).toBeNull();
     expect(screen.queryByText(/Google AdSense/i)).toBeNull();
   });
@@ -155,5 +156,38 @@ describe('CalculatorClient', () => {
     expect(mockCalculateFullProductionTree.mock.calls.length).toBe(callsBefore);
 
     alertMock.mockRestore();
+  });
+
+  test('renders summary cards before the production pipeline and strips Mk1 from building names', async () => {
+    const CalculatorClient = await loadCalculatorClient();
+
+    render(
+      <CalculatorClient
+        itemDb={{ items }}
+        initialItemSlug="iron-ingot"
+        recipesData={recipesData}
+        itemNamesData={itemNamesData}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('calculation-result')).toBeTruthy();
+    });
+
+    const result = screen.getByTestId('calculation-result');
+    const orderedCards = Array.from(
+      result.querySelectorAll(
+        '[data-testid="raw-resources"], [data-testid="buildings-summary"], [data-testid="total-power"], [data-testid="production-pipeline"]'
+      )
+    ).map((node) => (node as HTMLElement).dataset.testid);
+
+    expect(orderedCards).toEqual([
+      'raw-resources',
+      'buildings-summary',
+      'total-power',
+      'production-pipeline',
+    ]);
+    expect(screen.getByText('Smelter')).toBeTruthy();
+    expect(screen.queryByText('SmelterMk1')).toBeNull();
   });
 });

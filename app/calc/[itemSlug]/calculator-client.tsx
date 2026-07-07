@@ -30,6 +30,12 @@ interface CalculatorClientProps {
 
 // Remove old mock data definitions; use types imported from production-calculator
 
+const formatBuildingName = (buildingName: string) =>
+  buildingName
+    .replace(/^Build_/, '')
+    .replace(/_C$/, '')
+    .replace(/Mk\d+$/, '');
+
 export default function CalculatorClient({
   itemDb,
   initialItemSlug,
@@ -145,7 +151,9 @@ export default function CalculatorClient({
   // Recursively render production node cards - full-width vertical stack, no left indent
   const renderProductionNode = (node: ProductionNode, isRoot: boolean = false, depth: number = 0) => {
     const hasChildren = node.children.length > 0;
-    const buildingName = node.recipe.producedIn[0]?.replace('Build_', '').replace('_C', '') || 'N/A';
+    const buildingName = node.recipe.producedIn[0]
+      ? formatBuildingName(node.recipe.producedIn[0])
+      : 'N/A';
     const isRawResource = node.children.length === 0;
 
     // Depth color mapping
@@ -329,9 +337,6 @@ export default function CalculatorClient({
                 <div className="text-lg font-bold text-blue-900">
                   {selectedItem.mDisplayName}
                 </div>
-                <div className="text-xs text-blue-500 mt-1" data-testid="selected-item-class">
-                  {selectedItem.ClassName}
-                </div>
               </div>
             )}
 
@@ -420,6 +425,58 @@ export default function CalculatorClient({
         {/* ========== Production Pipeline Section ========== */}
         {calculationResult && (
           <div className="py-4 space-y-4 w-full overflow-hidden" data-testid="calculation-result">
+            {/* ========== Top Summary Grid ========== */}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* Raw resources required */}
+                <div className="bg-white rounded-lg shadow-md p-4 border-2 border-amber-300" data-testid="raw-resources">
+                  <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center">
+                    <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                    Raw Resources Required
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.entries(calculationResult.rawResources).map(([itemClass, info]) => (
+                      <div key={itemClass} className="bg-amber-50 rounded p-3 border border-amber-200">
+                        <div className="text-xs text-gray-600 truncate">{info.itemName}</div>
+                        <div className="text-base font-bold text-amber-700 mt-1">
+                          {info.totalRate.toFixed(2)}/min
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Buildings required */}
+                <div className="bg-white rounded-lg shadow-md p-4 border-2 border-purple-300" data-testid="buildings-summary">
+                  <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                    Buildings Required
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.entries(calculationResult.totalBuildings).map(([building, count]) => {
+                      const displayName = formatBuildingName(building);
+                      return (
+                        <div key={building} className="bg-purple-50 rounded p-3 border border-purple-200">
+                          <div className="text-xs text-gray-600 truncate">{displayName}</div>
+                          <div className="text-base font-bold text-purple-700 mt-1">
+                            ×{count.toFixed(2)}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Total power consumption */}
+              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow-md p-4 text-white" data-testid="total-power">
+                <h3 className="text-sm font-semibold mb-1 opacity-90">Total Power Consumption</h3>
+                <div className="text-3xl font-bold">
+                  {calculationResult.totalPower.toFixed(2)} <span className="text-xl">MW</span>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 border border-blue-200" data-testid="production-pipeline">
               <h2 className="text-lg font-bold text-blue-900 mb-1">
                 Production Pipeline
@@ -431,57 +488,6 @@ export default function CalculatorClient({
             <div className="w-full overflow-hidden flex flex-col items-center gap-0">
               {renderProductionNode(calculationResult.rootNode, true, 0)}
             </div>
-
-            {/* ========== Bottom Summary Grid ========== */}
-            <div className="mt-6 space-y-4">
-              {/* Raw resources required */}
-              <div className="bg-white rounded-lg shadow-md p-4 border-2 border-amber-300" data-testid="raw-resources">
-                <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center">
-                  <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
-                  Raw Resources Required
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(calculationResult.rawResources).map(([itemClass, info]) => (
-                    <div key={itemClass} className="bg-amber-50 rounded p-3 border border-amber-200">
-                      <div className="text-xs text-gray-600 truncate">{info.itemName}</div>
-                      <div className="text-base font-bold text-amber-700 mt-1">
-                        {info.totalRate.toFixed(2)}/min
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Total power consumption */}
-              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow-md p-4 text-white" data-testid="total-power">
-                <h3 className="text-sm font-semibold mb-1 opacity-90">Total Power Consumption</h3>
-                <div className="text-3xl font-bold">
-                  {calculationResult.totalPower.toFixed(2)} <span className="text-xl">MW</span>
-                </div>
-              </div>
-
-              {/* Buildings required */}
-              <div className="bg-white rounded-lg shadow-md p-4 border-2 border-purple-300" data-testid="buildings-summary">
-                <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center">
-                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                  Buildings Required
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(calculationResult.totalBuildings).map(([building, count]) => {
-                    const displayName = building.replace('Build_', '').replace('_C', '');
-                    return (
-                      <div key={building} className="bg-purple-50 rounded p-3 border border-purple-200">
-                        <div className="text-xs text-gray-600 truncate">{displayName}</div>
-                        <div className="text-base font-bold text-purple-700 mt-1">
-                          ×{count.toFixed(2)}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
           </div>
         )}
       </div>
