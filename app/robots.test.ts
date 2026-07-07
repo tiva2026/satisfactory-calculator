@@ -12,7 +12,6 @@ describe('robots', () => {
         },
       ],
       sitemap: 'https://satis.cc/sitemap.xml',
-      host: 'https://satis.cc',
     });
   });
 });

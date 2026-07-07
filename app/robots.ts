@@ -9,6 +9,5 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: 'https://satis.cc/sitemap.xml',
-    host: 'https://satis.cc',
   };
 }
