@@ -6,7 +6,6 @@ jest.mock('fs', () => ({
 
 describe('sitemap', () => {
   beforeEach(() => {
-    process.env.NEXT_PUBLIC_BASE_URL = 'https://example.com';
     readFileSyncMock.mockReset();
     readFileSyncMock.mockReturnValue(
       JSON.stringify([
@@ -22,7 +21,6 @@ describe('sitemap', () => {
   });
 
   afterEach(() => {
-    delete process.env.NEXT_PUBLIC_BASE_URL;
     jest.resetModules();
   });
 
@@ -32,10 +30,10 @@ describe('sitemap', () => {
     const routes = sitemap();
     expect(routes).toHaveLength(4);
     expect(routes.map((route) => route.url)).toEqual([
-      'https://example.com',
-      'https://example.com/calc',
-      'https://example.com/calc/iron-ingot',
-      'https://example.com/calc/iron-plate',
+      'https://satis.cc',
+      'https://satis.cc/calc',
+      'https://satis.cc/calc/iron-ingot',
+      'https://satis.cc/calc/iron-plate',
     ]);
   });
 });
