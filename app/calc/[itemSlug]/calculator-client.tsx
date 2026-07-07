@@ -426,7 +426,7 @@ export default function CalculatorClient({
           <div className="py-4 space-y-4 w-full overflow-hidden" data-testid="calculation-result">
             {/* ========== Top Summary Grid ========== */}
             <div className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4">
                 {/* Raw resources required */}
                 <div className="bg-white rounded-lg shadow-md p-4 border-2 border-amber-300" data-testid="raw-resources">
                   <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center">
