@@ -371,7 +371,6 @@ export default function CalculatorClient({
                         className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors"
                       >
                         <div className="font-medium text-gray-900">{item.mDisplayName}</div>
-                        <div className="text-xs text-gray-500 mt-0.5">{item.ClassName}</div>
                       </button>
                     ))}
                   </div>
@@ -427,14 +426,14 @@ export default function CalculatorClient({
           <div className="py-4 space-y-4 w-full overflow-hidden" data-testid="calculation-result">
             {/* ========== Top Summary Grid ========== */}
             <div className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 {/* Raw resources required */}
                 <div className="bg-white rounded-lg shadow-md p-4 border-2 border-amber-300" data-testid="raw-resources">
                   <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center">
                     <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
                     Raw Resources Required
                   </h3>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {Object.entries(calculationResult.rawResources).map(([itemClass, info]) => (
                       <div key={itemClass} className="bg-amber-50 rounded p-3 border border-amber-200">
                         <div className="text-xs text-gray-600 truncate">{info.itemName}</div>
@@ -452,7 +451,7 @@ export default function CalculatorClient({
                     <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
                     Buildings Required
                   </h3>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {Object.entries(calculationResult.totalBuildings).map(([building, count]) => {
                       const displayName = formatBuildingName(building);
                       return (

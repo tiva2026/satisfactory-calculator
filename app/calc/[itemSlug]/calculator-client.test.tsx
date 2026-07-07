@@ -126,7 +126,11 @@ describe('CalculatorClient', () => {
       target: { value: 'Plate' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /Iron Plate/ }));
+    const searchResult = screen.getByRole('button', { name: /Iron Plate/ });
+    expect(searchResult.textContent).toContain('Iron Plate');
+    expect(searchResult.textContent).not.toContain('Desc_IronPlate_C');
+
+    fireEvent.click(searchResult);
 
     expect(pushMock).toHaveBeenCalledWith('/calc/iron-plate');
   });

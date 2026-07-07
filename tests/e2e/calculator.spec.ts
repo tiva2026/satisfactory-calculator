@@ -19,6 +19,8 @@ test.describe('Satisfactory calculator', () => {
     await page.goto('/calc/iron-ingot');
 
     await page.getByLabel('Search Item').fill('Plate');
+    await expect(page.getByTestId('search-result-Desc_IronPlate_C')).toContainText('Iron Plate');
+    await expect(page.getByTestId('search-result-Desc_IronPlate_C')).not.toContainText('Desc_IronPlate_C');
     await page.getByTestId('search-result-Desc_IronPlate_C').click();
 
     await expect(page).toHaveURL(/\/calc\/iron-plate$/);
