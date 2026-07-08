@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { itemClassToSlug, slugToItemClass } from '@/src/utils/slugify';
 import { calculateFullProductionTree } from '@/src/lib/production-calculator';
+import type { CalculatorItem } from '@/src/lib/calculator-page-data';
 import type { ParsedRecipe, ProductionTreeResult, ProductionNode, RecipeItem } from '@/src/lib/production-calculator';
 
 /**
@@ -11,21 +13,16 @@ import type { ParsedRecipe, ProductionTreeResult, ProductionNode, RecipeItem } f
  * Mobile-First Interactive Calculator Client Component
  */
 
-interface Item {
-  ClassName: string;
-  mDisplayName: string;
-  mDescription?: string;
-  [key: string]: any;
-}
-
 interface CalculatorClientProps {
   itemDb: {
-    items: Item[];
+    items: CalculatorItem[];
     recipes?: any[];
   };
-  initialItemSlug: string;
+  initialItemSlug?: string;
   recipesData: { [key: string]: ParsedRecipe };
   itemNamesData: { [key: string]: string };
+  mode?: 'home' | 'detail';
+  featuredItems?: CalculatorItem[];
 }
 
 // Remove old mock data definitions; use types imported from production-calculator
@@ -40,12 +37,15 @@ export default function CalculatorClient({
   itemDb,
   initialItemSlug,
   recipesData,
-  itemNamesData
+  itemNamesData,
+  mode = 'detail',
+  featuredItems = []
 }: CalculatorClientProps) {
   const router = useRouter();
+  const isHomePage = mode === 'home';
   
   // ========== State Management ==========
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [selectedItem, setSelectedItem] = useState<CalculatorItem | null>(null);
   const [quantity, setQuantity] = useState<string>('10');
   const [searchQuery, setSearchQuery] = useState('');
   const [calculationResult, setCalculationResult] = useState<ProductionTreeResult | null>(null);
@@ -70,7 +70,7 @@ export default function CalculatorClient({
   }, [itemNamesData]);
 
   // Trigger calculation function
-  const triggerCalculation = useCallback((item: Item, rate: number) => {
+  const triggerCalculation = useCallback((item: CalculatorItem, rate: number) => {
     setIsCalculating(true);
     
     try {
@@ -127,7 +127,7 @@ export default function CalculatorClient({
   }, [itemDb.items, searchQuery]);
 
   // Handle item selection and update URL
-  const handleItemSelect = (item: Item) => {
+  const handleItemSelect = (item: CalculatorItem) => {
     setSelectedItem(item);
     const slug = itemClassToSlug(item.ClassName);
     router.push(`/calc/${slug}`);
@@ -304,6 +304,43 @@ export default function CalculatorClient({
         {/* ========== Input Section ========== */}
         <div className="bg-white shadow-md p-4">
           <div className="space-y-4">
+            {isHomePage && (
+              <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
+                  Quick start
+                </h2>
+                <p className="mt-2 text-base font-semibold text-slate-900">
+                  Open the calculator or jump straight into a common starter item.
+                </p>
+                <p className="mt-1 text-sm text-slate-600">
+                  Search any Satisfactory item, set a target rate, and see the exact buildings, raw resources, and power requirements.
+                </p>
+
+                {featuredItems.length > 0 && (
+                  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    {featuredItems.map((item) => {
+                      const slug = itemClassToSlug(item.ClassName);
+
+                      return (
+                        <Link
+                          key={item.ClassName}
+                          href={`/calc/${slug}`}
+                          className="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
+                        >
+                          <div className="text-sm font-semibold text-slate-900">
+                            {item.mDisplayName}
+                          </div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            Quick start item
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+            )}
+
             {/* Calculation status indicator */}
             {isCalculating && (
               <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-3">
