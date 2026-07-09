@@ -28,6 +28,8 @@ describe('calc item page', () => {
         { ClassName: 'Desc_IronIngot_C', mDisplayName: 'Iron Ingot' },
         { ClassName: 'Recipe_IngotIron_C', mDisplayName: 'Iron Ingot' },
         { ClassName: 'Desc_IronPlate_C', mDisplayName: 'Iron Plate' },
+        { ClassName: 'Desc_SAMIngot_C', mDisplayName: 'Reanimated SAM' },
+        { ClassName: 'Desc_Rebar_Explosive_C', mDisplayName: 'Explosive Rebar' },
         { ClassName: 'Build_SmelterMk1_C', mDisplayName: 'Smelter Mk.1' },
       ],
     },
@@ -46,6 +48,8 @@ describe('calc item page', () => {
     expect(params).toEqual([
       { itemSlug: 'iron-ingot' },
       { itemSlug: 'iron-plate' },
+      { itemSlug: 'sam-ingot' },
+      { itemSlug: 'rebar-explosive' },
     ]);
   });
 
@@ -73,6 +77,20 @@ describe('calc item page', () => {
         expect.objectContaining({ ClassName: 'Desc_IronIngot_C' }),
       ])
     );
+  });
+
+  test('CalcItemPage resolves acronym and underscore slugs without reverse class-name guesses', async () => {
+    const { default: CalcItemPage } = await loadPageModule();
+
+    const acronymElement = await CalcItemPage({
+      params: Promise.resolve({ itemSlug: 'sam-ingot' }),
+    });
+    const underscoreElement = await CalcItemPage({
+      params: Promise.resolve({ itemSlug: 'rebar-explosive' }),
+    });
+
+    expect(acronymElement.props.initialItemSlug).toBe('sam-ingot');
+    expect(underscoreElement.props.initialItemSlug).toBe('rebar-explosive');
   });
 
   test('CalcItemPage returns not found for invalid slugs', async () => {

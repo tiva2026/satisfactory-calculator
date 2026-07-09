@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { itemClassToSlug, slugToItemClass } from '@/src/utils/slugify';
+import { itemClassToSlug } from '@/src/utils/slugify';
 import { calculateFullProductionTree } from '@/src/lib/production-calculator';
 import type { CalculatorItem } from '@/src/lib/calculator-page-data';
 import type { ParsedRecipe, ProductionTreeResult, ProductionNode, RecipeItem } from '@/src/lib/production-calculator';
@@ -100,8 +100,7 @@ export default function CalculatorClient({
   // Set initial item based on slug on component mount and auto-calculate
   useEffect(() => {
     if (initialItemSlug && itemDb.items) {
-      const initialItemClass = slugToItemClass(initialItemSlug);
-      const foundItem = itemDb.items.find((item) => item.ClassName === initialItemClass);
+      const foundItem = itemDb.items.find((item) => itemClassToSlug(item.ClassName) === initialItemSlug);
       if (foundItem) {
         setSelectedItem(foundItem);
         // Auto-trigger calculation

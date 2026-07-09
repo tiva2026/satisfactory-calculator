@@ -1,12 +1,11 @@
-import { itemClassToSlug, slugToItemClass } from '@/src/utils/slugify';
+import { itemClassToSlug } from '@/src/utils/slugify';
 import CalculatorClient from './calculator-client';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { loadCalculatorPageData, type CalculatorItem } from '@/src/lib/calculator-page-data';
 
 function findSelectableItemBySlug(dataArray: CalculatorItem[], itemSlug: string): CalculatorItem | undefined {
-  const itemClassName = slugToItemClass(itemSlug);
-  return dataArray.find((item) => item.ClassName === itemClassName);
+  return dataArray.find((item) => itemClassToSlug(item.ClassName) === itemSlug);
 }
 
 // Generate static params - pre-render all item pages from the JSON database
@@ -59,7 +58,7 @@ export default async function CalcItemPage({
   const { itemSlug } = await params;
   const { items, recipesData, itemNamesData } = loadCalculatorPageData();
 
-  const selectedItem = items.find((item) => item.ClassName === slugToItemClass(itemSlug));
+  const selectedItem = findSelectableItemBySlug(items, itemSlug);
 
   if (!selectedItem) {
     notFound();

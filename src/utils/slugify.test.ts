@@ -25,6 +25,12 @@ describe('slugify route helpers', () => {
     expect(slugToItemClass('iron-ingot')).toBe('Desc_IronIngot_C');
   });
 
+  test('itemClassToSlug normalizes acronyms and underscores into stable route slugs', () => {
+    expect(itemClassToSlug('Desc_SAMIngot_C')).toBe('sam-ingot');
+    expect(itemClassToSlug('Desc_GunpowderMK2_C')).toBe('gunpowder-mk2');
+    expect(itemClassToSlug('Desc_Rebar_Explosive_C')).toBe('rebar-explosive');
+  });
+
   test('all selectable item classes produce unique slugs', () => {
     const items = loadGameItems();
     const slugs = items.map((item) => itemClassToSlug(item.ClassName!));
@@ -34,5 +40,6 @@ describe('slugify route helpers', () => {
     expect(slugs).toContain('iron-ingot');
     expect(slugs).toContain('iron-plate');
     expect(slugs).toContain('iron-plate-reinforced');
+    expect(slugs).not.toContain('rebar_explosive');
   });
 });

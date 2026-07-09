@@ -9,6 +9,7 @@ function itemClassToSlug(itemClass) {
     .replace(/_C$/, '')
     .replace(/([a-z])([A-Z])/g, '$1-$2')
     .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+    .replace(/_+/g, '-')
     .toLowerCase();
 }
 
@@ -46,7 +47,6 @@ function generateSitemap() {
   const lastmod = new Date().toISOString();
   const urls = [
     renderUrl(SITE_URL, 'weekly', '1', lastmod),
-    renderUrl(`${SITE_URL}/calc`, 'weekly', '0.9', lastmod),
     ...getSelectableItems().map((item) =>
       renderUrl(`${SITE_URL}/calc/${itemClassToSlug(item.ClassName)}`, 'monthly', '0.7', lastmod)
     ),
