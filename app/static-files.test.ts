@@ -19,6 +19,10 @@ Sitemap: https://satis.cc/sitemap.xml`);
 
     expect(sitemapXml).toContain('<loc>https://satis.cc</loc>');
     expect(sitemapXml).toContain('<loc>https://satis.cc/calc</loc>');
+    expect(sitemapXml).toContain('<loc>https://satis.cc/calc/cement</loc>');
+    expect(sitemapXml).toContain('<loc>https://satis.cc/calc/hazmat-filter</loc>');
+    expect(sitemapXml).not.toContain('<loc>https://satis.cc/calc/concrete</loc>');
+    expect(sitemapXml).not.toContain('<loc>https://satis.cc/calc/iodine-infused-filter</loc>');
     expect(sitemapXml).not.toContain('vercel.app');
     expect(sitemapXml).not.toContain('satisfactory-calc');
   });
